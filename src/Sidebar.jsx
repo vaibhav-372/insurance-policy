@@ -1,6 +1,16 @@
 import React from 'react';
 
-const Sidebar = ({ setActiveComponent }) => {
+const Sidebar = ({ activeComponent, setActiveComponent }) => {
+  const menuItems = [
+    { name: 'Dashboard', icon: 'fas fa-tachometer-alt' },
+    { name: 'AddPolicy', icon: 'fas fa-plus-circle' },
+    { name: 'AllPolicies', icon: 'fas fa-file-alt' },
+    { name: 'Renewals', icon: 'fas fa-calendar-check' },
+    { name: 'AddAgent', icon: 'fas fa-user-plus' },
+    { name: 'AgentProfile', icon: 'fas fa-user-circle' },
+    { name: 'ContactUsMessages', icon: 'fas fa-envelope' },
+  ];
+
   return (
     <div className="w-64 bg-teal-600 text-white font-medium h-full">
       <div className="p-4 text-center flex flex-col items-center">
@@ -14,48 +24,19 @@ const Sidebar = ({ setActiveComponent }) => {
       </div>
       <nav className="flex-grow mt-6">
         <ul>
-          <li
-            className="py-3 px-6 hover:bg-cyan-400 cursor-pointer transition-colors duration-200"
-            onClick={() => setActiveComponent('Dashboard')}
-          >
-            <i className="fas fa-tachometer-alt mr-3"></i> Dashboard
-          </li>
-          <li
-            className="py-3 px-6 hover:bg-cyan-400 cursor-pointer transition-colors duration-200"
-            onClick={() => setActiveComponent('AddPolicy')}
-          >
-            <i className="fas fa-plus-circle mr-3"></i> Add Policy
-          </li>
-          <li
-            className="py-3 px-6 hover:bg-cyan-400 cursor-pointer transition-colors duration-200"
-            onClick={() => setActiveComponent('AllPolicies')}
-          >
-            <i className="fas fa-file-alt mr-3"></i> All Policies
-          </li>
-          <li
-            className="py-3 px-6 hover:bg-cyan-400 cursor-pointer transition-colors duration-200"
-            onClick={() => setActiveComponent('Renewals')}
-          >
-            <i className="fas fa-calendar-check mr-3"></i> Renewals
-          </li>
-          <li
-            className="py-3 px-6 hover:bg-cyan-400 cursor-pointer transition-colors duration-200"
-            onClick={() => setActiveComponent('AddAgent')}
-          >
-            <i className="fas fa-user-plus mr-3"></i> Add Agent
-          </li>
-          <li
-            className="py-3 px-6 hover:bg-cyan-400 cursor-pointer transition-colors duration-200"
-            onClick={() => setActiveComponent('AgentProfile')}
-          >
-            <i className="fas fa-user-circle mr-3"></i> Agent Profile
-          </li>
-          <li
-            className="py-3 px-6 hover:bg-cyan-400 cursor-pointer transition-colors duration-200"
-            onClick={() => setActiveComponent('ContactUsMessages')}
-          >
-            <i className="fas fa-envelope mr-3"></i> Contact Us Messages
-          </li>
+          {menuItems.map((item) => (
+            <li
+              key={item.name}
+              className={`py-3 px-6 cursor-pointer transition-colors duration-200 ${
+                activeComponent === item.name
+                  ? 'bg-cyan-300' 
+                  : 'hover:bg-cyan-400'
+              }`}
+              onClick={() => setActiveComponent(item.name)}
+            >
+              <i className={`${item.icon} mr-3`}></i> {item.name}
+            </li>
+          ))}
         </ul>
       </nav>
       <div className="p-6">

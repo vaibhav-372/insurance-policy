@@ -1,9 +1,9 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import axios from 'axios';
 import * as Yup from 'yup';
 
 const AddAgentForm = () => {
-  // Formik hook to manage form state and validation
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -13,28 +13,36 @@ const AddAgentForm = () => {
     validationSchema: Yup.object({
       name: Yup.string()
         .max(50, 'Name must be 50 characters or less')
-        .required('Name Required'),
+        .required('Name is required'),
       phoneNumber: Yup.string()
         .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
-        .required('Ph.no Required'),
-        email: Yup.string()
-        .email()
-        .required('Email Required'),
+        .required('Phone number is required'),
+      email: Yup.string()
+        .email('Invalid email address')
+        .required('Email is required'),
     }),
-    onSubmit: (values) => {
-      console.log('Form Submitted:', values);
-      // You can send form values to your backend or handle them as needed
+    onSubmit: (values, { resetForm }) => {
+      axios.post('http://localhost:5000/api/agents', values)
+        .then(response => {
+          resetForm(); 
+          setTimeout(() => {
+            alert(`Agent added successfully:\nName: ${response.data.name}\nPhone: ${response.data.phoneNumber}\nEmail: ${response.data.email}`);
+          }, 0);
+          console.log('Agent added:', response.data);
+        })
+        .catch(error => {
+          console.error('There was an error adding the agent!', error);
+        })
     },
   });
 
   return (
-    <div className="w-2/4  bg-gray-400 shadow-3xl rounded-lg p-10 ">
+    <div className="w-2/4 bg-gray-400 shadow-3xl rounded-lg p-10">
       <h2 className="text-xl font-bold mb-4">Add Agent</h2>
       <form onSubmit={formik.handleSubmit}>
+        {/* Form Fields */}
         <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
-            Name
-          </label>
+          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Name</label>
           <input
             id="name"
             name="name"
@@ -50,9 +58,7 @@ const AddAgentForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="phoneNumber" className="block text-gray-700 font-medium mb-2">
-            Phone Number
-          </label>
+          <label htmlFor="phoneNumber" className="block text-gray-700 font-medium mb-2">Phone Number</label>
           <input
             id="phoneNumber"
             name="phoneNumber"
@@ -66,10 +72,9 @@ const AddAgentForm = () => {
             <div className="text-red-500 text-sm mt-1">{formik.errors.phoneNumber}</div>
           ) : null}
         </div>
+
         <div className="mb-4">
-          <label htmlFor="phoneNumber" className="block text-gray-700 font-medium mb-2">
-            Email
-          </label>
+          <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
           <input
             id="email"
             name="email"

@@ -38,6 +38,10 @@ const AddPolicyForm = () => {
       const response = await axios.post('http://localhost:5000/api/policies', formattedValues);
       // console.log('Policy saved', response.data);
       resetForm();
+      setTimeout(() => {
+        alert(`${response.data.customerName} was successfully registered for ${response.data.planType} insurance`);
+      }, 0);
+      
     } catch (error) {
       console.error('Error saving policy', error);
     }
@@ -51,7 +55,7 @@ const AddPolicyForm = () => {
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
-        {({ handleChange, handleBlur, values, isSubmitting }) => (
+        {({ handleChange, handleBlur}) => (
           <Form>
             <div className="mb-6">
               <label htmlFor="customerName" className="block text-gray-800 font-medium mb-2">Customer Name</label>
@@ -160,7 +164,6 @@ const AddPolicyForm = () => {
 
             <button
               type="submit"
-              disabled={isSubmitting}
               className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-semibold"
             >
               Submit

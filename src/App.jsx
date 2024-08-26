@@ -4,20 +4,16 @@ import Sidebar from './Sidebar';
 import PoliciesTable from './PoliciesTable';
 import RenewalPoliciesTable from './RenewalPoliciesTable';
 import AddAgentForm from './AddAgentForm';
-import AgentProfile from './AgentProfile';
+import AgentList from './AgentsList';
+import Dashboard from './Dashboard';
 
 function App() {
   const [activeComponent, setActiveComponent] = useState('AddPolicy');
 
-  const mockAgent = {
-    name: 'John Doe',
-    phoneNumber: '1234567890',
-    email: 'johndoe@example.com',
-    avatar: '', // URL of agent's avatar image
-  };
-
   const renderComponent = () => {
     switch (activeComponent) {
+      case 'Dashboard':
+        return <Dashboard />;
       case 'AddPolicy':
         return <AddPolicyForm />;
       case 'AllPolicies':
@@ -27,7 +23,7 @@ function App() {
       case 'AddAgent':
         return <AddAgentForm />
       case 'AgentProfile':
-        return <AgentProfile agent={mockAgent} />;  
+        return <AgentList />;
       default:
         return <AddPolicyForm />;
     }
@@ -35,13 +31,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-300 flex">
-      <div>
-        <Sidebar setActiveComponent={setActiveComponent} />
+      <div className="fixed w-1/4">
+        <Sidebar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
       </div>
-      <div className="w-2/3 m-10 p-10 flex items-center justify-center">
+      <div className="ml-[25%] w-3/4 m-10 p-10">
         {renderComponent()}
       </div>
     </div>
+
   );
 }
 
