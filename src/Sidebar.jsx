@@ -3,11 +3,11 @@ import React from 'react';
 const Sidebar = ({ activeComponent, setActiveComponent }) => {
   const menuItems = [
     { name: 'Dashboard', icon: 'fas fa-tachometer-alt' },
-    { name: 'AddPolicy', icon: 'fas fa-plus-circle' },
+    // { name: 'AddPolicy', icon: 'fas fa-plus-circle' },
     { name: 'AllPolicies', icon: 'fas fa-file-alt' },
-    { name: 'Renewals', icon: 'fas fa-calendar-check' },
     { name: 'AddAgent', icon: 'fas fa-user-plus' },
-    { name: 'AgentProfile', icon: 'fas fa-user-circle' },
+    { name: 'AgentList', icon: 'fas fa-user-circle' },
+    { name: 'Renewals', icon: 'fas fa-calendar-check' },
     { name: 'ContactUsMessages', icon: 'fas fa-envelope' },
   ];
 

@@ -5,7 +5,7 @@ import PoliciesTable from './PoliciesTable';
 import RenewalPoliciesTable from './RenewalPoliciesTable';
 import AddAgentForm from './AddAgentForm';
 import AgentList from './AgentsList';
-import Dashboard from './Dashboard';
+import Dashboard from './AdminDashboard';
 
 function App() {
   const [activeComponent, setActiveComponent] = useState('AddPolicy');
@@ -14,15 +14,15 @@ function App() {
     switch (activeComponent) {
       case 'Dashboard':
         return <Dashboard />;
-      case 'AddPolicy':
-        return <AddPolicyForm />;
+      // case 'AddPolicy':
+      //   return <AddPolicyForm />;
       case 'AllPolicies':
         return <PoliciesTable />;
       case 'Renewals':
         return <RenewalPoliciesTable />
       case 'AddAgent':
         return <AddAgentForm />
-      case 'AgentProfile':
+      case 'AgentList':
         return <AgentList />;
       default:
         return <AddPolicyForm />;

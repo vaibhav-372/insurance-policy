@@ -7,32 +7,33 @@ const AddAgentForm = () => {
   const formik = useFormik({
     initialValues: {
       name: '',
-      phoneNumber: '',
       email: '',
+      password: '',
     },
     validationSchema: Yup.object({
       name: Yup.string()
         .max(50, 'Name must be 50 characters or less')
         .required('Name is required'),
-      phoneNumber: Yup.string()
-        .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
-        .required('Phone number is required'),
-      email: Yup.string()
+        email: Yup.string()
         .email('Invalid email address')
         .required('Email is required'),
+        password: Yup.string()
+          .required('Password is required'),
     }),
     onSubmit: (values, { resetForm }) => {
+      console.log('Submitting form:', values);
       axios.post('http://localhost:5000/api/agents', values)
         .then(response => {
-          resetForm(); 
+          console.log('Response received:', response); // Log the entire response object
+          resetForm();
           setTimeout(() => {
-            alert(`Agent added successfully:\nName: ${response.data.name}\nPhone: ${response.data.phoneNumber}\nEmail: ${response.data.email}`);
+            alert(`Agent added successfully:\nName: ${response.data.name}\nPassword: ${response.data.password}\nEmail: ${response.data.email}`);
           }, 0);
           console.log('Agent added:', response.data);
         })
         .catch(error => {
           console.error('There was an error adding the agent!', error);
-        })
+        });
     },
   });
 
@@ -56,23 +57,6 @@ const AddAgentForm = () => {
             <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
           ) : null}
         </div>
-
-        <div className="mb-4">
-          <label htmlFor="phoneNumber" className="block text-gray-700 font-medium mb-2">Phone Number</label>
-          <input
-            id="phoneNumber"
-            name="phoneNumber"
-            type="text"
-            className={`w-full p-2 border rounded-lg ${formik.touched.phoneNumber && formik.errors.phoneNumber ? 'border-red-500' : 'border-gray-300'}`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.phoneNumber}
-          />
-          {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-            <div className="text-red-500 text-sm mt-1">{formik.errors.phoneNumber}</div>
-          ) : null}
-        </div>
-
         <div className="mb-4">
           <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
           <input
@@ -86,6 +70,21 @@ const AddAgentForm = () => {
           />
           {formik.touched.email && formik.errors.email ? (
             <div className="text-red-500 text-sm mt-1">{formik.errors.email}</div>
+          ) : null}
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-gray-700 font-medium mb-2">password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            className={`w-full p-2 border rounded-lg ${formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-gray-300'}`}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.password}
+          />
+          {formik.touched.password && formik.errors.password ? (
+            <div className="text-red-500 text-sm mt-1">{formik.errors.password}</div>
           ) : null}
         </div>
 
