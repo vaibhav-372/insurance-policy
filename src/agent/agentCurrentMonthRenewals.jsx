@@ -5,7 +5,11 @@ const CurrentMonthRenewals = () => {
   const [renewals, setRenewals] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/policies')
+    axios.get('http://localhost:5000/api/policies', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('Token')}`
+      }
+    })
       .then(response => {
         const currentMonth = new Date().getMonth();
         const currentRenewals = response.data.filter(policy => {

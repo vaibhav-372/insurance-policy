@@ -11,7 +11,11 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     // Fetch data from API
-    axios.get('http://localhost:5000/api/policies')
+    axios.get('http://localhost:5000/api/policies', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('Token')}`
+      }
+    })
       .then(response => {
         const policies = response.data;
         calculateStats(policies);
@@ -62,14 +66,14 @@ const AdminDashboard = () => {
     { name: 'Current Month Policies', value: currentMonthPolicies },
   ];
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+  const COLORS = ['#0088FE', '#00C49F', '#e744ff'];
 
   return (
     <div className="p-10">
       <h2 className="text-2xl font-semibold mb-6">Admin Dashboard</h2>
       
-      <div className="flex justify-center mb-10">
-        <PieChart width={400} height={400}>
+      <div className="flex justify-center mb-10 w-[750px]">
+        <PieChart width={700} height={400}>
           <Pie
             data={pieData}
             cx="50%"

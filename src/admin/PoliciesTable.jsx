@@ -40,7 +40,11 @@ const PoliciesTable = () => {
   useEffect(() => {
     const fetchPolicies = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/policies');
+        const response = await axios.get('http://localhost:5000/api/policies', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('Token')}`
+          }
+        });
         setRowData(response.data);
       } catch (error) {
         console.error('Error fetching policies', error);

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import AddPolicyForm from './AddPolicyForm';
-import Sidebar from './Sidebar';
-import PoliciesTable from './PoliciesTable';
-import RenewalPoliciesTable from './RenewalPoliciesTable';
-import AddAgentForm from './AddAgentForm';
-import AgentList from './AgentsList';
-import Dashboard from './AdminDashboard';
+import Sidebar from './admin/Sidebar';
+import PoliciesTable from './admin/PoliciesTable';
+import RenewalPoliciesTable from './admin/RenewalPoliciesTable';
+import AddAgentForm from './admin/AddAgentForm';
+import AgentList from './admin/AgentsList';
+import Dashboard from './admin/AdminDashboard';
 
 function App() {
   const [activeComponent, setActiveComponent] = useState('AddPolicy');
@@ -14,8 +13,6 @@ function App() {
     switch (activeComponent) {
       case 'Dashboard':
         return <Dashboard />;
-      // case 'AddPolicy':
-      //   return <AddPolicyForm />;
       case 'AllPolicies':
         return <PoliciesTable />;
       case 'Renewals':
@@ -25,7 +22,7 @@ function App() {
       case 'AgentList':
         return <AgentList />;
       default:
-        return <AddPolicyForm />;
+        return <Dashboard />;
     }
   };
 

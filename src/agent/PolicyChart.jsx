@@ -8,7 +8,11 @@ const PolicyChart = () => {
   const [policies, setPolicies] = useState([]);
   
   useEffect(() => {
-    axios.get('http://localhost:5000/api/policies')
+    axios.get('http://localhost:5000/api/policies', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('Token')}`
+      }
+    })
       .then(response => {
         setPolicies(response.data);
       })

@@ -12,7 +12,7 @@ const AgentList = () => {
   const [selectedAgent, setSelectedAgent] = useState(null);
 
   const [columnDefs] = useState([
-    { headerName: 'Agent Name', field: 'name', filter: true },
+    { headerName: 'Agent Name', field: 'name', filter: true, cellStyle:{height:"40px"}},
     { headerName: 'Email', field: 'email', filter: true },
     {
       headerName: 'Update',
@@ -28,7 +28,7 @@ const AgentList = () => {
           </button>
         );
       },
-    }    
+    }
   ]);
 
   useEffect(() => {
@@ -68,6 +68,7 @@ const AgentList = () => {
       <center className='font-bold text-3xl mb-7'>Agents List</center>
       <div className="ag-theme-balham h-96 mb-8">
         <AgGridReact
+          // cellstyle={cellStyle}
           rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={{ sortable: true, filter: true, resizable: true }}

@@ -1,4 +1,6 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -40,17 +42,41 @@ const agentSchema = new mongoose.Schema({
 // Create a model from the schema
 const Agent = mongoose.model('Agent', agentSchema);
 
+
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.header('Authorization');
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'No token provided, authorization denied' });
+  }
+
+  const token = authHeader.replace('Bearer ', '');
+
+  try {
+    const decoded = jwt.verify(token, 'your_jwt_secret');
+    req.user = decoded;
+    next();
+  } catch (err) {
+    res.status(401).json({ message: 'Token is not valid' });
+  }
+};
+
+
+
 // Routes
 
 // Get all policies
-app.get('/api/policies', async (req, res) => {
+app.get('/api/policies', authMiddleware, async (req, res) => {
   try {
     const policies = await Policy.find();
     res.json(policies);
+    console.log(res.json)
+    console.log("response sent: " + res.json)
   } catch (err) {
     res.status(500).json({ message: 'Server Error' });
   }
 });
+
 
 // Create a new policy
 app.post('/api/policies', async (req, res) => {
@@ -139,11 +165,21 @@ app.post('/api/agents/login', async (req, res) => {
       return res.status(404).json({ message: 'Agent not found' });
     }
 
-    if (agent.password !== password) {
+    // Compare the provided password with the hashed password stored in the database
+    const isMatch = await (password, agent.password);
+
+    if (!isMatch) {
       return res.status(400).json({ message: 'Invalid password' });
     }
 
-    res.status(200).json({ message: 'Login successful', agent });
+    // Generate JWT token
+    const token = jwt.sign(
+      { name: agent.name, email: agent.email },
+      'your_jwt_secret', // Replace with your own secret
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({ message: 'Login successful', token });
   } catch (err) {
     console.error('Error during login:', err);
     res.status(500).json({ message: 'Server error' });
