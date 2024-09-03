@@ -3,22 +3,30 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
 
 const PolicyChart = () => {
   const [policies, setPolicies] = useState([]);
-  
+
   useEffect(() => {
-    axios.get('http://localhost:5000/api/policies', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('Token')}`
-      }
-    })
-      .then(response => {
-        setPolicies(response.data);
+    const token = localStorage.getItem('Token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const agentName = decodedToken.name;
+
+      axios.get('http://localhost:5000/api/policies', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       })
-      .catch(error => {
-        console.error('Error fetching policies:', error);
-      });
+        .then(response => {
+          const agentPolicies = response.data.filter(policy => policy.agentName === agentName);
+          setPolicies(agentPolicies);
+        })
+        .catch(error => {
+          console.error('Error fetching policies:', error);
+        });
+    }
   }, []);
 
   const calculateMonthlyPolicies = () => {

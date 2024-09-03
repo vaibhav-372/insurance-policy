@@ -1,121 +1,179 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import * as Yup from 'yup';
-import axios from 'axios';
 
 const AddPolicyForm = () => {
+
+  const token = localStorage.getItem('Token');
+  const decodedToken = jwtDecode(token);
+
+
   const initialValues = {
     customerName: '',
-    phoneNo: '',
-    email: '',
-    policyNo: '',
     renewalDate: '',
+    phoneNo: '',
+    policyNo: '',
+    planType: '',
+    mailId: '',
+    agentName: decodedToken.name,
+    status: '',
+    message: '',
   };
 
   const validationSchema = Yup.object({
-    customerName: Yup.string()
-      .max(50, 'Name must be 50 characters or less')
-      .required('Customer name is required'),
+    customerName: Yup.string().required('Customer Name is required'),
+    renewalDate: Yup.date().required('Renewal Date is required'),
     phoneNo: Yup.string()
-      .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
-      .required('Phone number is required'),
-    email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-    policyNo: Yup.string()
-      .required('Policy number is required'),
-    renewalDate: Yup.date()
-      .required('Renewal date is required'),
+      .required('Phone Number is required'),
+      // .matches(/^[0-9]+$/, 'Phone Number must be digits only'),
+    policyNo: Yup.string().required('Policy Number is required'),
+    planType: Yup.string().required('Plan Type is required'),
+    mailId: Yup.string().email('Invalid email').required('Mail ID is required'),
+    status: Yup.string(),
+    message: Yup.string(),
   });
 
-  const handleSubmit = (values, { resetForm }) => {
-    const currentDate = new Date().toISOString().split('T')[0];
-    const policyData = {
+  const onSubmit = async (values, { resetForm }) => {
+    const formattedValues = {
       ...values,
-      date: currentDate,
+      renewalDate: new Date(values.renewalDate)
     };
 
-    axios.post('http://localhost:5000/api/policies', policyData)
-      .then(response => {
-        resetForm();
-        alert(`Policy added successfully:\nCustomer Name: ${response.data.customerName}\nPolicy Number: ${response.data.policyNo}`);
-      })
-      .catch(error => {
-        console.error('There was an error adding the policy!', error);
-      });
+    try {
+      const response = await axios.post('http://localhost:5000/api/policies', formattedValues);
+      // console.log('Policy saved', response.data);
+      resetForm();
+      setTimeout(() => {
+        alert(`${response.data.customerName} was successfully registered for ${response.data.planType} insurance`);
+      }, 0);
+      
+    } catch (error) {
+      console.error('Error saving policy', error);
+    }
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto mt-10 bg-gray-100 p-8 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-center">Add Policy</h2>
+    <div className="w-[500px] bg-gray-400 shadow-3xl rounded-lg p-10 ">
+      <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">Add New Policy</h2>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ handleChange, handleBlur}) => (
           <Form>
-            <div className="mb-4">
-              <label htmlFor="customerName" className="block text-gray-700 font-medium mb-2">Customer Name</label>
+            <div className="mb-6">
+              <label htmlFor="customerName" className="block text-gray-800 font-medium mb-2">Customer Name</label>
               <Field
+                type="text"
                 id="customerName"
                 name="customerName"
-                type="text"
-                className="w-full p-2 border rounded-lg"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200"
               />
-              <ErrorMessage name="customerName" component="div" className="text-red-500 text-sm mt-1" />
+              <ErrorMessage name="customerName" component="div" className="text-red-500 text-sm mt-2" />
             </div>
 
-            <div className="mb-4">
-              <label htmlFor="phoneNo" className="block text-gray-700 font-medium mb-2">Phone Number</label>
+            <div className="mb-6">
+              <label htmlFor="renewalDate" className="block text-gray-800 font-medium mb-2">Renewal Date</label>
               <Field
-                id="phoneNo"
-                name="phoneNo"
-                type="text"
-                className="w-full p-2 border rounded-lg"
-              />
-              <ErrorMessage name="phoneNo" component="div" className="text-red-500 text-sm mt-1" />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
-              <Field
-                id="email"
-                name="email"
-                type="email"
-                className="w-full p-2 border rounded-lg"
-              />
-              <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="policyNo" className="block text-gray-700 font-medium mb-2">Policy Number</label>
-              <Field
-                id="policyNo"
-                name="policyNo"
-                type="text"
-                className="w-full p-2 border rounded-lg"
-              />
-              <ErrorMessage name="policyNo" component="div" className="text-red-500 text-sm mt-1" />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="renewalDate" className="block text-gray-700 font-medium mb-2">Renewal Date</label>
-              <Field
+                type="date"
                 id="renewalDate"
                 name="renewalDate"
-                type="date"
-                className="w-full p-2 border rounded-lg"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200"
               />
-              <ErrorMessage name="renewalDate" component="div" className="text-red-500 text-sm mt-1" />
+              <ErrorMessage name="renewalDate" component="div" className="text-red-500 text-sm mt-2" />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="phoneNo" className="block text-gray-800 font-medium mb-2">Phone No</label>
+              <Field
+                type="text"
+                id="phoneNo"
+                name="phoneNo"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200"
+              />
+              <ErrorMessage name="phoneNo" component="div" className="text-red-500 text-sm mt-2" />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="policyNo" className="block text-gray-800 font-medium mb-2">Policy No</label>
+              <Field
+                type="text"
+                id="policyNo"
+                name="policyNo"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200"
+              />
+              <ErrorMessage name="policyNo" component="div" className="text-red-500 text-sm mt-2" />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="planType" className="block text-gray-800 font-medium mb-2">Plan Type</label>
+              <Field
+                type="text"
+                id="planType"
+                name="planType"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200"
+              />
+              <ErrorMessage name="planType" component="div" className="text-red-500 text-sm mt-2" />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="mailId" className="block text-gray-800 font-medium mb-2">Mail ID</label>
+              <Field
+                type="email"
+                id="mailId"
+                name="mailId"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200"
+              />
+              <ErrorMessage name="mailId" component="div" className="text-red-500 text-sm mt-2" />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="status" className="block text-gray-800 font-medium mb-2">Status</label>
+              <Field
+                type="text"
+                id="status"
+                name="status"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200"
+              />
+              <ErrorMessage name="status" component="div" className="text-red-500 text-sm mt-2" />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="message" className="block text-gray-800 font-medium mb-2">Message</label>
+              <Field
+                as="textarea"
+                id="message"
+                name="message"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                rows="4"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200 resize-none"
+              />
+              <ErrorMessage name="message" component="div" className="text-red-500 text-sm mt-2" />
             </div>
 
             <button
               type="submit"
-              className="bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors duration-200 w-full"
-              disabled={isSubmitting}
+              className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold"
             >
-              Add Policy
+              Submit
             </button>
           </Form>
         )}

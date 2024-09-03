@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
 const AgentDashboard = () => {
@@ -14,15 +14,27 @@ const AgentDashboard = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('Token');
-    
+
     if (token) {
       const decodedToken = jwtDecode(token);
+      const agentName = decodedToken.name;
+
+      axios.get('http://localhost:5000/api/policies', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+        .then(response => {
+          const agentPolicies = response.data.filter(policy => policy.agentName === agentName);
+          calculateStats(agentPolicies);
+        })
+        .catch(error => console.error('Error fetching policy data:', error));
     } else {
       navigate("/login");
     }
 
   }, [navigate]);
-  
+
   const calculateStats = (policies) => {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
@@ -70,7 +82,7 @@ const AgentDashboard = () => {
 
   return (
     <div className="p-10">
-      <h2 className="text-2xl font-semibold mb-6">Admin Dashboard</h2>
+      <h2 className="text-2xl font-semibold mb-6">Agent Dashboard</h2>
 
       <div className="flex justify-center mb-10 w-[750px]">
         <PieChart width={700} height={400}>

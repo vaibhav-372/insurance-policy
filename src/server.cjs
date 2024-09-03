@@ -24,6 +24,7 @@ const policySchema = new mongoose.Schema({
   policyNo: { type: String, required: true },
   planType: { type: String, required: true },
   mailId: { type: String, required: true },
+  agentName: { type: String},
   status: { type: String },
   message: { type: String },
   date: { type: Date, default: Date.now }
@@ -66,13 +67,13 @@ const authMiddleware = (req, res, next) => {
 // Routes
 
 // Get all policies
-app.get('/api/policies', authMiddleware, async (req, res) => {
+app.get('/api/policies', async (req, res) => {
   try {
     const policies = await Policy.find();
     res.json(policies);
-    console.log(res.json)
-    console.log("response sent: " + res.json)
-  } catch (err) {
+    console.log( "Policies sent");
+    // console.log("response sent: " + policies)
+  } catch (error) {
     res.status(500).json({ message: 'Server Error' });
   }
 });
@@ -80,22 +81,24 @@ app.get('/api/policies', authMiddleware, async (req, res) => {
 
 // Create a new policy
 app.post('/api/policies', async (req, res) => {
-  const { customerName, renewalDate, phoneNo, policyNo, planType, mailId, status, message } = req.body;
+  const { customerName, renewalDate, phoneNo, policyNo, planType, mailId, agentName, status, message } = req.body;
 
   const strippedRenewalDate = new Date(renewalDate);
   strippedRenewalDate.setHours(0, 0, 0, 0);
 
+
   try {
     const newPolicy = new Policy({
       customerName,
-      renewalDate: strippedRenewalDate,
+      renewalDate: strippedRenewalDate, 
       phoneNo,
       policyNo,
       planType,
       mailId,
+      agentName,
       status,
       message,
-      date: new Date().setHours(0, 0, 0, 0),
+      date: new Date(),
     });
 
     await newPolicy.save();
@@ -106,19 +109,27 @@ app.post('/api/policies', async (req, res) => {
   }
 });
 
+
 // Create a new agent
 app.post('/api/agents', async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    const newAgent = new Agent({ name, email, password });
+
+    // const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newAgent = new Agent({ name, email, password: hashedPassword });
+
     await newAgent.save();
+
     res.status(201).json(newAgent);
   } catch (err) {
     console.error('Error saving agent:', err);
     res.status(500).json({ message: 'Failed to create agent' });
   }
 });
+
 
 // Get all agents
 app.get('/api/agents', async (req, res) => {
@@ -165,8 +176,7 @@ app.post('/api/agents/login', async (req, res) => {
       return res.status(404).json({ message: 'Agent not found' });
     }
 
-    // Compare the provided password with the hashed password stored in the database
-    const isMatch = await (password, agent.password);
+    const isMatch = await bcrypt.compare(password, agent.password);
 
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid password' });
@@ -185,6 +195,7 @@ app.post('/api/agents/login', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 // Admin Dashboard Endpoints
 
