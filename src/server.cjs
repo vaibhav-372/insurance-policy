@@ -10,6 +10,12 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+const adminCredentials = {
+  username: 'admin',
+  password: 'password123',
+};
+
+
 // Connection to MongoDB
 mongoose
   .connect("mongodb://localhost:27017/insurance-policy", {})
@@ -63,6 +69,18 @@ const authMiddleware = (req, res, next) => {
 };
 
 
+//admin login
+app.post('/api/admin/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === adminCredentials.username && password === adminCredentials.password) {
+    const token = jwt.sign({ username }, 'your_jwt_secret', { expiresIn: '1h' });
+    res.status(200).json({ message: 'Login successful', token });
+  } else {
+    res.status(401).json({ message: 'Invalid username or password' });
+  }
+});
+
 
 // Routes
 
@@ -71,7 +89,7 @@ app.get('/api/policies', async (req, res) => {
   try {
     const policies = await Policy.find();
     res.json(policies);
-    console.log( "Policies sent");
+    // console.log( "Policies sent");
     // console.log("response sent: " + policies)
   } catch (error) {
     res.status(500).json({ message: 'Server Error' });

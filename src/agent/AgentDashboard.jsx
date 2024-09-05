@@ -30,7 +30,7 @@ const AgentDashboard = () => {
         })
         .catch(error => console.error('Error fetching policy data:', error));
     } else {
-      navigate("/login");
+      navigate("/agent/login");
     }
 
   }, [navigate]);

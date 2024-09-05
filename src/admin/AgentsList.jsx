@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 const AgentList = () => {
   const gridRef = useRef();
   const [rowData, setRowData] = useState([]);
-  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [selectedAgent,setSelectedAgent] = useState(null);
 
   const [columnDefs] = useState([
     { headerName: 'Agent Name', field: 'name', filter: true, cellStyle:{height:"40px"}},

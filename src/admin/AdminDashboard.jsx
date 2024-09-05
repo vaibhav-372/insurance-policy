@@ -12,9 +12,9 @@ const AdminDashboard = () => {
   useEffect(() => {
     // Fetch data from API
     axios.get('http://localhost:5000/api/policies', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('Token')}`
-      }
+      // headers: {
+      //   'Authorization': `Bearer ${localStorage.getItem('Token')}`
+      // }
     })
       .then(response => {
         const policies = response.data;

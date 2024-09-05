@@ -1,15 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ activeComponent, setActiveComponent }) => {
   const menuItems = [
     { name: 'Dashboard', icon: 'fas fa-tachometer-alt' },
-    // { name: 'AddPolicy', icon: 'fas fa-plus-circle' },
     { name: 'AllPolicies', icon: 'fas fa-file-alt' },
     { name: 'AddAgent', icon: 'fas fa-user-plus' },
     { name: 'AgentList', icon: 'fas fa-user-circle' },
     { name: 'Renewals', icon: 'fas fa-calendar-check' },
     { name: 'ContactUsMessages', icon: 'fas fa-envelope' },
   ];
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken'); // Remove the admin token
+    navigate('/admin/login'); // Redirect to the admin login page
+  };
 
   return (
     <div className="w-64 bg-teal-600 text-white font-medium h-full">
@@ -40,7 +47,10 @@ const Sidebar = ({ activeComponent, setActiveComponent }) => {
         </ul>
       </nav>
       <div className="p-6">
-        <button className="w-full bg-red-500 py-2 rounded-lg hover:bg-red-600 transition duration-200">
+        <button
+          className="w-full bg-red-500 py-2 rounded-lg hover:bg-red-600 transition duration-200"
+          onClick={handleLogout} // Handle logout
+        >
           <i className="fas fa-sign-out-alt mr-2"></i> Logout
         </button>
       </div>

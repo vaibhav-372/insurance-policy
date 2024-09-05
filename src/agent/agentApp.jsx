@@ -20,18 +20,18 @@ const AgentApp = () => {
     console.log('Token in useEffect:', token);
 
     if (!token) {
-      navigate('/login');
+      navigate('/agent/login');
     } else {
       try {
         const decodedToken = jwtDecode(token);
         console.log('Decoded Token:', decodedToken); // For debugging
         setUser({ email: decodedToken.email, name: decodedToken.name });
         console.log('Decoded Token Name : ', decodedToken.name);
-        navigate('/dashboard')
+        navigate('/agent/dashboard')
       } catch (error) {
         console.error('Error decoding token:', error);
         // Optionally handle token decoding error or redirection here
-        navigate('/login');
+        navigate('/agent/login');
       }
     }
   }, [navigate]);
@@ -54,7 +54,7 @@ const AgentApp = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/agent/login');
   };
 
   return (
@@ -74,7 +74,7 @@ const AgentApp = () => {
         </div>
         <ul className=' flex justify-end w-full items-center m-5'>
           <li
-            className={`p-2  cursor-pointer hover:bg-gray-700 ${activeComponent === 'dashboard' ? 'bg-gray-700' : ''}`}
+            className={`p-2  cursor-pointer hover:bg-gray-700 ${activeComponent === 'dashboard' ? 'bg-gray-700' : ''}`}           
             onClick={() => setActiveComponent('dashboard')}
           >
             Dashboard

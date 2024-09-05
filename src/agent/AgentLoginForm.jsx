@@ -1,8 +1,17 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from 'react-router-dom';
+
 
 const AgentLoginForm = ({ onSubmit }) => {
+
+    const navigate = useNavigate();
+
+    const openAdminLogin = () => {
+      navigate('/admin/login');
+    }
+
   const initialValues = {
     email: "",
     password: "",
@@ -21,7 +30,7 @@ const AgentLoginForm = ({ onSubmit }) => {
     >
       {({ handleChange, handleBlur, values, isSubmitting }) => (
         <>
-          <Form className="mb-3 w-full max-w-sm">
+          <Form className="p-7 w-1/3 max-w-sm bg-gray-200 h-80 rounded-xl shadow-2xl shadow-gray-500">
             <h2 className="text-2xl font-bold mb-4">Login</h2>
             <div className="mb-4">
               <Field
@@ -61,6 +70,9 @@ const AgentLoginForm = ({ onSubmit }) => {
               >
                 Login
               </button>
+              <div className="text-end font-semibold mt-4 text-sm hover:text-base">
+                <a className="cursor-pointer" onClick={openAdminLogin}>login as ADMIN</a>
+              </div>
             </div>
           </Form>
         </>

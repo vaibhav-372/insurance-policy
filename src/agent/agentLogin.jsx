@@ -23,7 +23,7 @@ const AgentLogin = () => {
         alert('Login successful');
         localStorage.setItem('Token', response.data.token); // Store token
         // setIsAuthenticated(true); // Update context state
-        navigate('/dashboard'); // Redirect to dashboard
+        navigate('/agent/dashboard'); // Redirect to dashboard
       })
       .catch(error => {
         if (error.response && error.response.data.message) {
@@ -40,7 +40,7 @@ const AgentLogin = () => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100 ">
       <AgentLoginForm onSubmit={handleSubmit} />
     </div>
   );
