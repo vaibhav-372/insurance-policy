@@ -17,16 +17,16 @@ const AgentApp = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('Token');
-    console.log('Token in useEffect:', token);
+    // console.log('Token in useEffect:', token);
 
     if (!token) {
       navigate('/agent/login');
     } else {
       try {
         const decodedToken = jwtDecode(token);
-        console.log('Decoded Token:', decodedToken); // For debugging
+        // console.log('Decoded Token:', decodedToken); // For debugging
         setUser({ email: decodedToken.email, name: decodedToken.name });
-        console.log('Decoded Token Name : ', decodedToken.name);
+        // console.log('Decoded Token Name : ', decodedToken.name);
         navigate('/agent/dashboard')
       } catch (error) {
         console.error('Error decoding token:', error);

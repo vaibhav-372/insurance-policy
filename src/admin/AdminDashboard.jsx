@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import axios from 'axios';
+import AllPolicyCount from './AllPoliciesTypeCount';
 
 const AdminDashboard = () => {
   const [totalPolicies, setTotalPolicies] = useState(0);
@@ -91,6 +92,8 @@ const AdminDashboard = () => {
           <Tooltip />
         </PieChart>
       </div>
+
+      <AllPolicyCount/>
 
       <div className="mb-10">
         <h3 className="text-lg font-semibold mb-4">Policies by Year</h3>

@@ -16,6 +16,10 @@ const formatDate = (dateStr) => {
 
 const PolicyChart = () => {
   const [policies, setPolicies] = useState([]);
+  const [selectedPolicy, setSelectedPolicy] = useState(null);
+  const [editedPolicy, setEditedPolicy] = useState({});
+  const [isEditEnabled, setIsEditEnabled] = useState(false); // New state to toggle edit mode
+
 
   useEffect(() => {
     const token = localStorage.getItem('Token');
@@ -48,6 +52,36 @@ const PolicyChart = () => {
     return policies.filter(policy => new Date(policy.date).getFullYear() === currentYear).length;
   };
 
+  const handleUpdateClick = (policy) => {
+    setSelectedPolicy(policy);
+    setEditedPolicy({ ...policy }); // Set the initial values for the form to be the selected policy
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedPolicy({ ...editedPolicy, [name]: value });
+  };
+
+  const handleUpdateSubmit = () => {
+    axios.put(`http://localhost:5000/api/policies/${editedPolicy._id}`, editedPolicy)
+      .then(response => {
+        // Update the policy list with the updated policy
+        setPolicies(policies.map(policy =>
+          policy._id === editedPolicy._id ? editedPolicy : policy
+        ));
+        setSelectedPolicy(null); // Hide the modal after the update
+        alert('Policy updated successfully!');
+      })
+      .catch(error => {
+        console.error('Error updating policy:', error);
+        alert('Failed to update policy.');
+      });
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPolicy(null);
+  };
+
   return (
     <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
       <h2 className="text-2xl font-bold mb-4">Policy Summary</h2>
@@ -68,10 +102,140 @@ const PolicyChart = () => {
             filter: 'true',
             valueFormatter: params => formatDate(params.value), // Format the date
           },
-          { headerName: 'Status', field: 'status' }
+          { headerName: 'Premium Amount', field: 'amount' },
+          {
+            headerName: 'Details',
+            field: 'update',
+            cellRenderer: (params) => {
+              return (
+                <button
+                  className='bg-slate-500 text-white w-24 h-9 flex items-center justify-center rounded-lg'
+                  onClick={() => handleUpdateClick(params.data)}
+                >
+                  Details
+                </button>
+              );
+            },
+          }
         ]}
         defaultColDef={{ sortable: true, filter: true }}
       />
+
+      {/* Modal for updating the policy */}
+      {selectedPolicy && (
+        <div className="fixed inset-0  backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-md w-1/3">
+            <h3 className="text-xl font-bold mb-2">Update Policy Details</h3>
+            <div className="mb-4">
+              <label className="mr-2">Enable Edit:</label>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={isEditEnabled}
+                  onChange={(e) => setIsEditEnabled(e.target.checked)}
+                />
+                <span className="slider"></span>
+              </label>
+            </div>
+            <form>
+              <div className="mb-4">
+                <label>Customer Name</label>
+                <input
+                  type="text"
+                  name="customerName"
+                  value={editedPolicy.customerName}
+                  onChange={handleInputChange}
+                  disabled={!isEditEnabled}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label>Policy Number</label>
+                <input
+                  type="text"
+                  name="policyNo"
+                  value={editedPolicy.policyNo}
+                  onChange={handleInputChange}
+                  disabled={!isEditEnabled}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label>Renewal Date</label>
+                <input
+                  type="date"
+                  name="renewalDate"
+                  value={editedPolicy.renewalDate.split('T')[0]} // Ensure proper formatting for date input
+                  onChange={handleInputChange}
+                  disabled={!isEditEnabled}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label>Premium Amount</label>
+                <input
+                  type="text"
+                  name="amount"
+                  value={editedPolicy.amount}
+                  onChange={handleInputChange}
+                  disabled={!isEditEnabled}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label>Phone Number</label>
+                <input
+                  type="text"
+                  name="phoneNo"
+                  value={editedPolicy.phoneNo}
+                  onChange={handleInputChange}
+                  disabled={!isEditEnabled}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="mailId"
+                  value={editedPolicy.mailId}
+                  onChange={handleInputChange}
+                  disabled={!isEditEnabled}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label>Plan Type</label>
+                <input
+                  type="text"
+                  name="planType"
+                  value={editedPolicy.planType}
+                  onChange={handleInputChange}
+                  disabled={!isEditEnabled}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleUpdateSubmit}
+                  disabled={!isEditEnabled}
+                  className="bg-blue-500 text-white py-2 px-4 rounded mr-2"
+                >
+                  Update Policy
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="bg-red-500 text-white py-2 px-4 rounded"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

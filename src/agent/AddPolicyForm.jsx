@@ -18,7 +18,7 @@ const AddPolicyForm = () => {
     planType: '',
     mailId: '',
     agentName: decodedToken.name,
-    status: '',
+    amount: '',
     message: '',
   };
 
@@ -31,7 +31,7 @@ const AddPolicyForm = () => {
     policyNo: Yup.string().required('Policy Number is required'),
     planType: Yup.string().required('Plan Type is required'),
     mailId: Yup.string().email('Invalid email').required('Mail ID is required'),
-    status: Yup.string(),
+    amount: Yup.number(),
     message: Yup.string(),
   });
 
@@ -119,13 +119,21 @@ const AddPolicyForm = () => {
             <div className="mb-6">
               <label htmlFor="planType" className="block text-gray-800 font-medium mb-2">Plan Type</label>
               <Field
-                type="text"
+                as="select"
                 id="planType"
                 name="planType"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200"
-              />
+              >
+                <option value="" disabled="true"></option>
+                <option value="Health">Health</option>
+                <option value="Car">Car</option>
+                <option value="Bike">Bike</option>
+                <option value="Home">Home</option>
+                <option value="Life">Life</option>
+                <option value="Family">Family</option>
+              </Field>
               <ErrorMessage name="planType" component="div" className="text-red-500 text-sm mt-2" />
             </div>
 
@@ -143,16 +151,16 @@ const AddPolicyForm = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor="status" className="block text-gray-800 font-medium mb-2">Status</label>
+              <label htmlFor="Premium Amount" className="block text-gray-800 font-medium mb-2">Premiun Amount</label>
               <Field
                 type="text"
-                id="status"
-                name="status"
+                id="amount"
+                name="amount"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200"
               />
-              <ErrorMessage name="status" component="div" className="text-red-500 text-sm mt-2" />
+              <ErrorMessage name="amount" component="div" className="text-red-500 text-sm mt-2" />
             </div>
 
             <div className="mb-6">

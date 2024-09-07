@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import InsuranceTypeCounts from './PolicyTypeCounts';
 
 const AgentDashboard = () => {
   const [totalPolicies, setTotalPolicies] = useState(0);
@@ -84,49 +85,59 @@ const AgentDashboard = () => {
     <div className="p-10">
       <h2 className="text-2xl font-semibold mb-6">Agent Dashboard</h2>
 
-      <div className="flex justify-center mb-10 w-[750px]">
-        <PieChart width={700} height={400}>
-          <Pie
-            data={pieData}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={({ name, value }) => `${name}: ${value}`}
-            outerRadius={150}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {pieData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-      </div>
+      {totalPolicies === 0 ? (
+        <div className="text-center text-lg font-semibold">
+          No policies registered yet.
+        </div>
+      ) : (
+        <>
+          <div className="flex justify-center mb-10 w-[750px]">
+            <PieChart width={700} height={400}>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, value }) => `${name}: ${value}`}
+                outerRadius={150}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {pieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </div>
 
-      <div className="mb-10">
-        <h3 className="text-lg font-semibold mb-4">Policies by Year</h3>
-        <BarChart width={600} height={300} data={policiesByYear}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="year" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="count" fill="#82ca9d" />
-        </BarChart>
-      </div>
+          <InsuranceTypeCounts/>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Policies in Current Year by Month</h3>
-        <BarChart width={600} height={300} data={monthlyPolicies}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="count" fill="#8884d8" />
-        </BarChart>
-      </div>
+          <div className="mb-10">
+            <h3 className="text-lg font-semibold mb-4">Policies by Year</h3>
+            <BarChart width={600} height={300} data={policiesByYear}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#82ca9d" />
+            </BarChart>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Policies in Current Year by Month</h3>
+            <BarChart width={600} height={300} data={monthlyPolicies}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#8884d8" />
+            </BarChart>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -55,7 +55,7 @@ const Services = () => {
             <section className="text-gray-400 body-font bg-gray-900 pt-7">
                 {/* <center><h1 className='text-3xl font-bold '>Our Services</h1></center> */}
                 <OurServices/>
-                <div className="container px-14 py-24 mx-auto bg-gray-800 my-16">
+                <div className="container px-14 py-24 mx-auto bg-gray-800 ">
                     <div className="flex flex-wrap w-full mb-20 items-center">
                         <div className="lg:w-1/2 w-full mb-6 lg:mb-0 justify-center items-center">
                             <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-white">Companies who’ve trusted our Insurance</h1>

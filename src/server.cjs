@@ -31,7 +31,7 @@ const policySchema = new mongoose.Schema({
   planType: { type: String, required: true },
   mailId: { type: String, required: true },
   agentName: { type: String},
-  status: { type: String },
+  amount: { type: Number },
   message: { type: String },
   date: { type: Date, default: Date.now }
 });
@@ -99,7 +99,7 @@ app.get('/api/policies', async (req, res) => {
 
 // Create a new policy
 app.post('/api/policies', async (req, res) => {
-  const { customerName, renewalDate, phoneNo, policyNo, planType, mailId, agentName, status, message } = req.body;
+  const { customerName, renewalDate, phoneNo, policyNo, planType, mailId, agentName, amount, message } = req.body;
 
   const strippedRenewalDate = new Date(renewalDate);
   strippedRenewalDate.setHours(0, 0, 0, 0);
@@ -114,7 +114,7 @@ app.post('/api/policies', async (req, res) => {
       planType,
       mailId,
       agentName,
-      status,
+      amount,
       message,
       date: new Date(),
     });
@@ -210,6 +210,27 @@ app.post('/api/agents/login', async (req, res) => {
     res.status(200).json({ message: 'Login successful', token });
   } catch (err) {
     console.error('Error during login:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+//update policy by id
+app.put('/api/policies/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the policy by ID and update it with the request body
+    const updatedPolicy = await Policy.findByIdAndUpdate(id, req.body, {
+      new: true, // Return the updated document
+    });
+
+    if (!updatedPolicy) {
+      return res.status(404).json({ message: 'Policy not found' });
+    }
+
+    res.json(updatedPolicy);
+  } catch (error) {
+    console.error('Error updating policy:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

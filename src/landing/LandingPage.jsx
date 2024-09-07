@@ -6,16 +6,21 @@ import ContactUs from './ContactUs';
 import Home from './Home';
 
 const LandingPage = () => {
-  // Define the data for the cards
-
-
   return (
     <div>
       <Nav />
-      <Home />
-      <Services />
-      <AboutUs />
-      <ContactUs />
+      <section id="home">
+        <Home />
+      </section>
+      <section id="services">
+        <Services />
+      </section>
+      <section id="aboutUs">
+        <AboutUs />
+      </section>
+      <section id="contact">
+        <ContactUs />
+      </section>
     </div>
   );
 };

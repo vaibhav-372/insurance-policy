@@ -33,7 +33,7 @@ const PoliciesTable = () => {
       filter: true,
       valueFormatter: params => formatDate(params.value) // Format the renewal date
     },
-    { headerName: 'Status', field: 'status', filter: true },
+    { headerName: 'Premium Amount', field: 'amount', filter: true },
     { headerName: 'message', field: 'message', filter: true },
   ]);
 

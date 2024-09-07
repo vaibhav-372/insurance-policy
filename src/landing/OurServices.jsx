@@ -2,7 +2,7 @@ import React from 'react';
 
 const OurServices = () => {
     return (
-        <div className="min-h-screen bg-contain flex flex-col items-center ">
+        <div className="min-h-screen bg-contain flex flex-col items-center">
             <h1 className="text-4xl font-bold mb-10 text-center">Our Insurance Services</h1>
             <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 p-8">
                 <ServiceCard
@@ -46,7 +46,7 @@ const ServiceCard = ({ title, description, imgSrc }) => {
             <img className="w-full h-40 object-cover mb-4" src={imgSrc} alt={title} />
             <h2 className="text-2xl font-semibold mb-2">{title}</h2>
             <p className="text-gray-600">{description}</p>
-            <a className='text-blue-700 font-medium underline hover:text-sm' href="">learn more</a>
+            {/* <a className='text-blue-700 font-medium underline hover:text-sm' href="">learn more</a> */}
         </div>
     );
 };
