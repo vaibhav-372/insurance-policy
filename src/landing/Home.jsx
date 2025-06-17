@@ -1,4 +1,5 @@
 import React from 'react';
+import Carousel from './Carousel';
 
 const Home = () => {
   return (
@@ -12,6 +13,7 @@ const Home = () => {
           Explore our wide range of services designed to meet your unique requirements. Whether it’s safeguarding your health, securing your family’s future, buying your dream home, or investing for the future, we have the perfect plan for you.
         </p>
       </div>
+      {/* <Carousel/> */}
     </div>
   );
 }

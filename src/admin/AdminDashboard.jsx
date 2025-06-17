@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import axios from 'axios';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+} from 'recharts';
 import AllPolicyCount from './AllPoliciesTypeCount';
+
+const COLORS = ['#0088FE', '#00C49F', '#e744ff', '#ffc658', '#ff8042', '#a0e'];
 
 const AdminDashboard = () => {
   const [totalPolicies, setTotalPolicies] = useState(0);
@@ -9,14 +22,10 @@ const AdminDashboard = () => {
   const [currentMonthPolicies, setCurrentMonthPolicies] = useState(0);
   const [policiesByYear, setPoliciesByYear] = useState([]);
   const [monthlyPolicies, setMonthlyPolicies] = useState([]);
+  const [policyPieData, setPolicyPieData] = useState([]); // 👈
 
   useEffect(() => {
-    // Fetch data from API
-    axios.get('http://localhost:5000/api/policies', {
-      // headers: {
-      //   'Authorization': `Bearer ${localStorage.getItem('Token')}`
-      // }
-    })
+    axios.get('http://localhost:5050/api/policies')
       .then(response => {
         const policies = response.data;
         calculateStats(policies);
@@ -61,39 +70,62 @@ const AdminDashboard = () => {
     setMonthlyPolicies(monthlyPolicies);
   };
 
-  const pieData = [
+  const summaryPieData = [
     { name: 'Total Policies', value: totalPolicies },
     { name: 'Yearly Policies', value: yearlyPolicies },
     { name: 'Current Month Policies', value: currentMonthPolicies },
   ];
 
-  const COLORS = ['#0088FE', '#00C49F', '#e744ff'];
-
   return (
     <div className="p-10">
       <h2 className="text-2xl font-semibold mb-6">Admin Dashboard</h2>
-      
-      <div className="flex justify-center mb-10 w-[750px]">
-        <PieChart width={700} height={400}>
-          <Pie
-            data={pieData}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={({ name, value }) => `${name}: ${value}`}
-            outerRadius={150}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {pieData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
+
+      <div className="flex flex-wrap justify-center gap-10 mb-10">
+        {totalPolicies > 0 ? (
+          <>
+            <PieChart width={400} height={400}>
+              <Pie
+                data={summaryPieData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, value }) => `${name}: ${value}`}
+                outerRadius={150}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {summaryPieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+
+            {policyPieData.length > 0 && (
+              <PieChart width={400} height={400}>
+                <Pie
+                  data={policyPieData}
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius={150}
+                  label
+                >
+                  {policyPieData.map((entry, index) => (
+                    <Cell key={`policy-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            )}
+          </>
+        ) : (
+          <div className="text-xl text-gray-600 mt-20">There are no policies yet...</div>
+        )}
       </div>
 
-      <AllPolicyCount/>
+      <AllPolicyCount onPieDataReady={(data) => setPolicyPieData(data)} />
 
       <div className="mb-10">
         <h3 className="text-lg font-semibold mb-4">Policies by Year</h3>

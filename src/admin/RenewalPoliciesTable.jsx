@@ -7,7 +7,7 @@ const RenewalPoliciesTable = () => {
   useEffect(() => {
     const admintoken = localStorage.getItem('adminToken');
     if (admintoken) {
-      axios.get('http://localhost:5000/api/policies', {
+      axios.get('http://localhost:5050/api/policies', {
         headers: {
           'Authorization': `Bearer ${admintoken}`
         }

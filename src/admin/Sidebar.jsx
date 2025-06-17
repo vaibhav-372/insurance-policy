@@ -8,7 +8,7 @@ const Sidebar = ({ activeComponent, setActiveComponent }) => {
     { name: 'AddAgent', icon: 'fas fa-user-plus' },
     { name: 'AgentList', icon: 'fas fa-user-circle' },
     { name: 'Renewals', icon: 'fas fa-calendar-check' },
-    { name: 'ContactUsMessages', icon: 'fas fa-envelope' },
+    // { name: 'ContactUsMessages', icon: 'fas fa-envelope' },
   ];
 
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const Sidebar = ({ activeComponent, setActiveComponent }) => {
   };
 
   return (
-    <div className="w-64 bg-teal-600 text-white font-medium h-full">
+    <div className="w-64 bg-teal-400 text-black font-medium h-full">
       <div className="p-4 text-center flex flex-col items-center">
         <img
           src="https://imgs.search.brave.com/D3N5sM1r3FBF29P55ZOmbDuDuiDxL-WBr6KElInf_BY/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC93cDUzMjkz/MzMuanBn"
@@ -36,8 +36,8 @@ const Sidebar = ({ activeComponent, setActiveComponent }) => {
               key={item.name}
               className={`py-3 px-6 cursor-pointer transition-colors duration-200 ${
                 activeComponent === item.name
-                  ? 'bg-cyan-300' 
-                  : 'hover:bg-cyan-400'
+                  ? 'bg-teal-500' 
+                  : 'hover:bg-teal-600'
               }`}
               onClick={() => setActiveComponent(item.name)}
             >

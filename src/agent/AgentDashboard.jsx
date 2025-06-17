@@ -20,7 +20,7 @@ const AgentDashboard = () => {
       const decodedToken = jwtDecode(token);
       const agentName = decodedToken.name;
 
-      axios.get('http://localhost:5000/api/policies', {
+      axios.get('http://localhost:5050/api/policies', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

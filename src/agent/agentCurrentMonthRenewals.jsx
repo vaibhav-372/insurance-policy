@@ -10,36 +10,36 @@ const CurrentMonthRenewals = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
       const agentName = decodedToken.name;
-
-      axios.get('http://localhost:5000/api/policies', {
+  
+      axios.get('http://localhost:5050/api/policies', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
         .then(response => {
-          const currentDate = new Date();
-          const currentMonth = currentDate.getMonth();
-          const currentYear = currentDate.getFullYear();
-
-          const currentRenewals = response.data.filter(policy => {
+          const today = new Date();
+          const tenDaysLater = new Date();
+          tenDaysLater.setDate(today.getDate() + 10);
+  
+          const upcomingRenewals = response.data.filter(policy => {
             const renewalDate = new Date(policy.renewalDate);
             return (
-              renewalDate.getMonth() === currentMonth &&
-              renewalDate.getFullYear() === currentYear &&
-              policy.agentName === agentName // Filter by agentName
+              renewalDate >= today &&
+              renewalDate <= tenDaysLater &&
+              policy.agentName === agentName
             );
           });
-
+  
           // Sort the renewals by renewalDate in ascending order
-          currentRenewals.sort((a, b) => new Date(a.renewalDate) - new Date(b.renewalDate));
-
-          setRenewals(currentRenewals);
+          upcomingRenewals.sort((a, b) => new Date(a.renewalDate) - new Date(b.renewalDate));
+  
+          setRenewals(upcomingRenewals);
         })
         .catch(error => {
           console.error('Error fetching renewals:', error);
         });
     }
-  }, []);
+  }, []);  
 
   return (
     <div className="w-full max-w-lg mx-auto mt-10">

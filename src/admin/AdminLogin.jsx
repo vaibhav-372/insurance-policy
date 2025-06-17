@@ -17,7 +17,7 @@ const AdminLogin = () => {
       password: Yup.string().required('Password is required'),
     }),
     onSubmit: (values, { setSubmitting, setErrors }) => {
-      axios.post('http://localhost:5000/api/admin/login', values)
+      axios.post('http://localhost:5050/api/admin/login', values)
         .then(response => {
           alert('Login successful');
           localStorage.setItem('adminToken', response.data.token); // Store the JWT token

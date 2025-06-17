@@ -19,7 +19,6 @@ const AddPolicyForm = () => {
     mailId: '',
     agentName: decodedToken.name,
     amount: '',
-    message: '',
   };
 
   const validationSchema = Yup.object({
@@ -32,7 +31,6 @@ const AddPolicyForm = () => {
     planType: Yup.string().required('Plan Type is required'),
     mailId: Yup.string().email('Invalid email').required('Mail ID is required'),
     amount: Yup.number(),
-    message: Yup.string(),
   });
 
   const onSubmit = async (values, { resetForm }) => {
@@ -42,7 +40,7 @@ const AddPolicyForm = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/policies', formattedValues);
+      const response = await axios.post('http://localhost:5050/api/policies', formattedValues);
       // console.log('Policy saved', response.data);
       resetForm();
       setTimeout(() => {
@@ -55,7 +53,7 @@ const AddPolicyForm = () => {
   };
 
   return (
-    <div className="w-[500px] bg-gray-400 shadow-3xl rounded-lg p-10 ">
+    <div className="w-3/4 shadow-3xl rounded-lg p-10 ">
       <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">Add New Policy</h2>
       <Formik
         initialValues={initialValues}
@@ -161,20 +159,6 @@ const AddPolicyForm = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200"
               />
               <ErrorMessage name="amount" component="div" className="text-red-500 text-sm mt-2" />
-            </div>
-
-            <div className="mb-6">
-              <label htmlFor="message" className="block text-gray-800 font-medium mb-2">Message</label>
-              <Field
-                as="textarea"
-                id="message"
-                name="message"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                rows="4"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 focus:border-transparent transition duration-200 resize-none"
-              />
-              <ErrorMessage name="message" component="div" className="text-red-500 text-sm mt-2" />
             </div>
 
             <button

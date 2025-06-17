@@ -107,7 +107,7 @@ const AgentApp = () => {
         </ul>
       </nav>
       {/* Main Content */}
-      <main className="w-3/4 bg-gray-200 p-6 mt-32 flex justify-center">
+      <main className="w-3/4 bg-gray-200 p-6 my-32 flex justify-center">
         {renderComponent()}
       </main>
     </div>

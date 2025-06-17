@@ -27,11 +27,11 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-300 flex">
-      <div className="fixed w-1/4">
+    <div className="min-h-screen flex">
+      <div className="fixed h-full">
         <Sidebar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
       </div>
-      <div className="ml-[25%] w-3/4 m-10 p-10">
+      <div className="ml-[20%] w-3/4 m-10 p-10">
         {renderComponent()}
       </div>
     </div>
